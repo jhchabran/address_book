@@ -1,5 +1,4 @@
 require 'rubygems'
-require 'rest_client'
 
 require 'address_book/google'
 
