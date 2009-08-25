@@ -9,7 +9,7 @@ describe "AddressBook" do
   
   context "being used" do 
     it "should fetch addresses around Paris" do
-      AddressBook.fetch(:city => 'Paris').should have_at_least(1).item
+      AddressBook.fetch.should have_at_least(1).item
     end
   end
 end
