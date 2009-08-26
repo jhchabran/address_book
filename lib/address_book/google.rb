@@ -13,28 +13,39 @@ module AddressBook
     end
     
     def fetch
-      Net::HTTP.start HOST do |http|
-        response = http.request_get(build_url, 'Referer' => @opts[:referer])
-        # add some errors handling here
-        parse(response)
+      data = response['responseData']
+      return unless data # will suit until some exceptions are defined to be raised here
+      return unless data['results']
+      
+      data['results'].collect do |result|
+        result['addressLines'].to_s
       end
     end
     
     private
+    
+    def request
+      Net::HTTP.start HOST do |http|
+        response = http.request_get(build_url, 'Referer' => @opts[:referer])
+        # TODO add some errors handling here
+        parse_json(response)
+      end
+    end
+    
+    def response
+      @response ||= request
+    end
+    
+    def more_result
+      response
+    end
+    
     def build_url
       @url ||= SERVICE_PATH + PARAMETERS + @opts[:query]
     end
     
-    # TODO, add some code 
-    def parse(response)
-      json = JSON.parse(response.body)
-      if json['responseData']['results'] 
-        json['responseData']['results'].collect do |result|
-          result['addressLines'].to_s
-        end
-      else
-        nil
-      end
+    def parse_json(response)
+      JSON.parse(response.body)
     end
     
   end
