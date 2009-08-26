@@ -7,6 +7,7 @@ module AddressBook
   class Google    
     HOST = "ajax.googleapis.com"
     SERVICE_PATH = "/ajax/services/search/local"
+    MAX_RESULTS_PER_QUERY = 32 # google limits us to 32 for local search 
     
     NotEnoughResultsError = Class.new StandardError
     InvalidResponseError  = Class.new StandardError
@@ -17,31 +18,42 @@ module AddressBook
     end
     
     def fetch
-      @addresses = []
+      addresses = []
+      @opts[:queries].each do |query|
+        addresses += fetch_query(query)
+        break if @opts[:max] !=0 && addresses.length > @opts[:max] 
+      end
       
-      query = {:v => '1.0', :start => '0', :rsz => 'large', :q => @opts[:query]}
+      addresses[0..(@opts[:max] - 1)]
+    end
+    
+    private
+  
+    def fetch_query(query)
+      addresses = []
+      
+      query = {:v => '1.0', :start => '0', :rsz => 'large', :q => query}
       
       current_path = build_path(@url, query)
 
       Net::HTTP.start HOST do |http|
-        until(@addresses.length >= @opts[:min]) do 
+        until(addresses.length >= 32) do 
           response = http.request_get(current_path, 'Referer' => @opts[:referer])
           response = parse_json(response)
           
           raise InvalidResponseError unless valid_response?(response)
-          raise NotEnoughResultsError unless enough_results?(response)
 
-          @addresses += collect_addresses(response)
+          addresses += collect_addresses(response)
     
-          current_path = build_path(@url, query.merge(:start => (@addresses.length + 1).to_s))
+          current_path = build_path(@url, query.merge(:start => (addresses.length).to_s))
         end
       end
     
-      @addresses[0..(@opts[:max] - 1)]
+      addresses
     end
     
-    def enough_results?(response)
-      response['responseData']['cursor']['estimatedResultCount'].to_i > @opts[:min]
+    def enough_queries_for_expected_addresses?
+      @opts[:query]
     end
     
     def build_url(url,parameters=nil)
@@ -60,9 +72,7 @@ module AddressBook
         result['addressLines'].join(' ')
       end
     end
-    
-    private
-    
+        
     def valid_response?(response)
       return unless response['responseData']
       return unless response['responseStatus'] == 200

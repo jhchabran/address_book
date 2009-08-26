@@ -4,18 +4,20 @@ Valid addresses fetcher, aimed to provide random geographical positions near a p
 
 == How to 
 
-AddressBook.fetch(options) where options is a hash that can contain : 
-** :min minimal amount of fetched addresses ( default 3 )
-** :max maximum amount of fetched addresses ( default between 0 and 8 depending on your query )
-** :query a query to select addresses,  ( default "Hostels Paris France" )
-** :referer Google's api always expects a referer ( default "localhost:3000" )
+AddressBook.fetch(options) where options is a hash that can contain ( 0 means unlimited ): 
 
-It returns an array of addresses. 
+* :min minimal amount of fetched addresses, 0 by default
+* :max maximum amount of fetched addresses, 0 by default
+* :queries an array of queries to select addresses, enough to fetch 90 addresses in Paris by default
+* :referer Google's api always expects a referer ( default "localhost:3000" )
+
+It returns an array of valid addresses. 
 
 See spec/address_book_spec.rb for more.
 
 == TODO 
 
+* mock the specs !
 * an executable to fetch addresses from CLI
 * various outputs format
 * more errors handling
