@@ -11,8 +11,9 @@ module AddressBook
     {
       :query => 'Hostel Paris',
       :min => 3,
-      :max => 5,
+      :max => -1,
       :referer => 'localhost:3000'
     }
   end
+  
 end

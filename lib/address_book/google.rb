@@ -36,7 +36,7 @@ module AddressBook
         end
       end
     
-      @addresses.flatten
+      @addresses.flatten[0..(@opts[:max] - 1)]
     end
     
     def enough_results?(response)
