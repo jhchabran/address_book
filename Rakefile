@@ -11,7 +11,8 @@ begin
     gem.homepage = "http://github.com/jhchabran/address_book"
     gem.authors = ["J.H. Chabran"]
     gem.add_development_dependency "rspec"
-#    gem.add_dependency ''
+    gem.add_dependency 'json'
+    gem.add_dependency 'addressable'
   end
 rescue LoadError
   puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
