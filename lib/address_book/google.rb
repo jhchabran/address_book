@@ -13,10 +13,8 @@ module AddressBook
     end
     
     def fetch
+      return unless valid_response?
       data = response['responseData']
-      return unless data # will suit until some exceptions are defined to be raised here
-      return unless data['results']
-      
       data['results'].collect do |result|
         result['addressLines'].to_s
       end
@@ -24,10 +22,17 @@ module AddressBook
     
     private
     
+    def valid_response?
+      return unless response['responseData']
+      return unless response['responseStatus'] == 200
+      return unless response['responseData']['results']
+      true
+    end
+    
     def request
       Net::HTTP.start HOST do |http|
         response = http.request_get(build_url, 'Referer' => @opts[:referer])
-        # TODO add some errors handling here
+        # TODO add some http errors handling here
         parse_json(response)
       end
     end
