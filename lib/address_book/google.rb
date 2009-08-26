@@ -28,15 +28,16 @@ module AddressBook
           response = http.request_get(current_path, 'Referer' => @opts[:referer])
           response = parse_json(response)
           
+          raise InvalidResponseError unless valid_response?(response)
           raise NotEnoughResultsError unless enough_results?(response)
 
-          @addresses << collect_addresses(response)
+          @addresses += collect_addresses(response)
     
           current_path = build_path(@url, query.merge(:start => (@addresses.length + 1).to_s))
         end
       end
     
-      @addresses.flatten[0..(@opts[:max] - 1)]
+      @addresses[0..(@opts[:max] - 1)]
     end
     
     def enough_results?(response)
