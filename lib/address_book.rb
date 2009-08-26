@@ -9,7 +9,7 @@ module AddressBook
   
   def self.default_options
     {
-      :query => 'Hostel Paris',
+      :query => 'Hostel Paris France',
       :min => 3,
       :max => -1,
       :referer => 'localhost:3000'

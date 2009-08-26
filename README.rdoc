@@ -1,6 +1,24 @@
 = address_book
 
-Description goes here.
+Valid addresses fetcher, aimed to provide random geographical positions near a place, a city or within a country, everything that google maps can understand. 
+
+== How to 
+
+AddressBook.fetch(options) where options is a hash that can contain : 
+** :min minimal amount of fetched addresses ( default 3 )
+** :max maximum amount of fetched addresses ( default between 0 and 8 depending on your query )
+** :query a query to select addresses,  ( default "Hostels Paris France" )
+** :referer Google's api always expects a referer ( default "localhost:3000" )
+
+It returns an array of addresses. 
+
+See spec/address_book_spec.rb for more.
+
+== TODO 
+
+* an executable to fetch addresses from CLI
+* various outputs format
+* more errors handling
 
 == Note on Patches/Pull Requests
  
