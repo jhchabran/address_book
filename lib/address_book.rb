@@ -16,5 +16,4 @@ module AddressBook
     }
   end
   
-  #p fetch(:query => 'hostel 75014 france', :min => 50)
 end
